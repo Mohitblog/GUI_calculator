@@ -1,105 +1,91 @@
-
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class GUI_2 {
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // Frame create karna
-                JFrame frame = new JFrame("Number Addition GUI");
-//                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                // Panel create karna input fields aur button ke liye
-                JPanel panel = new JPanel(new GridLayout(6, 3));
+    // Reads both number fields, performs the operation and shows the result or a friendly error message.
+    private static void calculate(JTextField first, JTextField second, JLabel resultLabel, char operation) {
+        try {
+            int num1 = Integer.parseInt(first.getText().trim());
+            int num2 = Integer.parseInt(second.getText().trim());
 
-                // Label aur text field for first number
-                JLabel label1 = new JLabel("Enter first number:");
-                JTextField textField1 = new JTextField();
-                panel.add(label1);
-                panel.add(textField1);
-
-                // Label aur text field for second number
-                JLabel label2 = new JLabel("Enter second number:");
-                JTextField textField2 = new JTextField();
-                panel.add(label2);
-                panel.add(textField2);
-
-                // Add button aur result label
-                JButton addButton = new JButton("Add");
-                JLabel resultLabel = new JLabel("Result: ", JLabel.CENTER);
-                panel.add(addButton);
-                panel.add(resultLabel);
-
-                JButton SubButton = new JButton("SUB");
-                JLabel resultLabel1 = new JLabel("Result: ", JLabel.CENTER);
-                panel.add(SubButton);
-                panel.add(resultLabel1);
-
-                JButton MulButton = new JButton("MUL");
-                JLabel resultLabel2 = new JLabel("Result: ", JLabel.CENTER);
-                panel.add(MulButton);
-                panel.add(resultLabel2);
-
-                JButton DivButton = new JButton("DIV");
-                JLabel resultLabel3 = new JLabel("Result: ", JLabel.CENTER);
-                panel.add(DivButton);
-                panel.add(resultLabel3);
-
-                // Button action listener to perform addition
-                addButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        // Numbers ko parse karna aur result calculate karna
-                        int num1 = Integer.parseInt(textField1.getText());
-                        int num2 = Integer.parseInt(textField2.getText());
-                        int result = num1 + num2;
-                        resultLabel.setText("Result: " + result);
+            switch (operation) {
+                case '+':
+                    resultLabel.setText("Result: " + (num1 + num2));
+                    break;
+                case '-':
+                    resultLabel.setText("Result: " + (num1 - num2));
+                    break;
+                case '*':
+                    resultLabel.setText("Result: " + (num1 * num2));
+                    break;
+                case '/':
+                    if (num2 == 0) {
+                        resultLabel.setText("Cannot divide by zero");
+                    } else {
+                        resultLabel.setText("Result: " + ((double) num1 / num2));
                     }
-                });
-
-
-                SubButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        // Numbers ko parse karna aur result calculate karna
-                        int num1 = Integer.parseInt(textField1.getText());
-                        int num2 = Integer.parseInt(textField2.getText());
-                        int result1 = num1 - num2;
-                        resultLabel1.setText("Result: " + result1);
-                    }
-                });
-
-                MulButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        // Numbers ko parse karna aur result calculate karna
-                        int num1 = Integer.parseInt(textField1.getText());
-                        int num2 = Integer.parseInt(textField2.getText());
-                        int result2 = num1 * num2;
-                        resultLabel2.setText("Result: " + result2);
-                    }
-                });
-
-                DivButton.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        // Numbers ko parse karna aur result calculate karna
-                        double num1 = Integer.parseInt(textField1.getText());
-                        double num2 = Integer.parseInt(textField2.getText());
-                        double result3 = num1 / num2;
-                        resultLabel3.setText("Result: " + result3);
-                    }
-                });
-
-                // Panel ko frame mein add karna
-                frame.getContentPane().add(panel);
-
-                // Frame ka size set karna
-                frame.setSize(400, 400);
-
-                // Frame ko visible banana
-                frame.setVisible(true);
+                    break;
+                default:
+                    break;
             }
+        } catch (NumberFormatException ex) {
+            resultLabel.setText("Enter whole numbers only");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            // Create the window and close the program when it is closed
+            JFrame frame = new JFrame("Simple Calculator");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            // Panel for the input fields, buttons and result labels
+            JPanel panel = new JPanel(new GridLayout(6, 3));
+
+            // Label and text field for the first number
+            JLabel label1 = new JLabel("Enter first number:");
+            JTextField textField1 = new JTextField();
+            panel.add(label1);
+            panel.add(textField1);
+
+            // Label and text field for the second number
+            JLabel label2 = new JLabel("Enter second number:");
+            JTextField textField2 = new JTextField();
+            panel.add(label2);
+            panel.add(textField2);
+
+            // One button and one result label for each operation
+            JButton addButton = new JButton("Add");
+            JLabel addResult = new JLabel("Result: ", JLabel.CENTER);
+            panel.add(addButton);
+            panel.add(addResult);
+
+            JButton subButton = new JButton("SUB");
+            JLabel subResult = new JLabel("Result: ", JLabel.CENTER);
+            panel.add(subButton);
+            panel.add(subResult);
+
+            JButton mulButton = new JButton("MUL");
+            JLabel mulResult = new JLabel("Result: ", JLabel.CENTER);
+            panel.add(mulButton);
+            panel.add(mulResult);
+
+            JButton divButton = new JButton("DIV");
+            JLabel divResult = new JLabel("Result: ", JLabel.CENTER);
+            panel.add(divButton);
+            panel.add(divResult);
+
+            // Button actions
+            addButton.addActionListener(e -> calculate(textField1, textField2, addResult, '+'));
+            subButton.addActionListener(e -> calculate(textField1, textField2, subResult, '-'));
+            mulButton.addActionListener(e -> calculate(textField1, textField2, mulResult, '*'));
+            divButton.addActionListener(e -> calculate(textField1, textField2, divResult, '/'));
+
+            // Add the panel to the window, set its size and show it
+            frame.getContentPane().add(panel);
+            frame.setSize(400, 400);
+            frame.setVisible(true);
         });
     }
 }
